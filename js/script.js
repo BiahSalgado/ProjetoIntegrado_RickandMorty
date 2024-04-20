@@ -4,11 +4,15 @@ $(function () {
 
     console.log('teste');
 
+//     document.getElementById("loader").style.display = "none";
+//    document.getElementById("myDivLoading").style.display = "block";
+
     buscaAPIPersonagens();
 
     $("#btn_buscar").click(function() {
 
-        // filtro dos dados da memoria buscaAPIPersonagens();
+        document.getElementById("divBtnBuscar").style.display = "none";
+        document.getElementById("loading").style.display = "block";
         
         var campoPersonagem = $('#personagem').val();
 
@@ -24,6 +28,8 @@ $(function () {
             carregaDadosTabela(listPersonagens);
         }
 
+        document.getElementById("divBtnBuscar").style.display = "block";
+        document.getElementById("loading").style.display = "none";
     });
 
     //HEADER
@@ -46,6 +52,9 @@ $(function () {
 
     function buscaAPIPersonagens()
     {
+        document.getElementById("divBtnBuscar").style.display = "none";
+        document.getElementById("loading").style.display = "block";
+
         var url = 'https://rickandmortyapi.com/api/character/?page=#pagina#';
 
         var resultado = httpGet(url.replace('#pagina#',1));
@@ -61,6 +70,9 @@ $(function () {
         }
        
         carregaDadosTabela(listPersonagens);
+
+        document.getElementById("divBtnBuscar").style.display = "block";
+        document.getElementById("loading").style.display = "none";
     }
 
     function carregaDadosTabela(dados)
