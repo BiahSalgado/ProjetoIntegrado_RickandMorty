@@ -1,10 +1,29 @@
 $(function () {
 
+     var listPersonagens = [];
+
     console.log('teste');
+
     buscaAPIPersonagens();
 
     $("#btn_buscar").click(function() {
-        //buscaAPIPersonagens();
+
+        // filtro dos dados da memoria buscaAPIPersonagens();
+        
+        var campoPersonagem = $('#personagem').val();
+
+        if(campoPersonagem.length > 0)
+        {
+            //var filtrado = listPersonagens.filter(function(obj) { return obj.name == campoPersonagem; });
+            var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
+
+            carregaDadosTabela(filtrado);
+        }
+        else
+        {
+            carregaDadosTabela(listPersonagens);
+        }
+
     });
 
     //HEADER
@@ -27,24 +46,29 @@ $(function () {
 
     function buscaAPIPersonagens()
     {
-        var pagina = 1;
-        var url = 'https://rickandmortyapi.com/api/character/?page=' + pagina;
-        
-        var resultado = httpGet(url);
-       
-        console.log(resultado.results);
+        var url = 'https://rickandmortyapi.com/api/character/?page=#pagina#';
 
-        carregaDadosTabela(resultado.results);
+        var resultado = httpGet(url.replace('#pagina#',1));
+        var totalPaginas = resultado.info.pages +1;
+
+        for (var i = 1; i < totalPaginas; i++) {
+
+           var resultadoAPI = httpGet(url.replace('#pagina#',i));
+
+           for (var x = 0; x < resultadoAPI.results.length; x++) {
+                listPersonagens.push(resultadoAPI.results[x]);
+            }
+        }
+       
+        carregaDadosTabela(listPersonagens);
     }
 
     function carregaDadosTabela(dados)
     {
         var content = '';
-        
+
         $.each(dados, function(index, value) {
             
-            console.log(index + ' :  id' + value.id  + '  nome' + value.name  + ' img: ' +  value.image);
-
             content += '<tr id="' + value.id + '">';
             content += '<td>' +  value.id + '</td>';
             content += '<td> <b>' + value.name  + ' </b></td>';
