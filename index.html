@@ -32,8 +32,8 @@
 <header class="main_header container">        
     <div class="content">
     
-        <div class="main_header_logo">
-            <a href="https://www.loopnerd.com.br/templates-html" target="_blank"><img src="img/logo.png" alt="logo.png" title="Loop Nerd"/></a>
+        <div >
+            <a target="_blank"><img src="img/rickandmorty.png" alt="logo.png" title="Rick and Morty"/></a>
         </div>
     
     </div>
@@ -54,22 +54,16 @@
                     <input type="text" class="input-balao-up" id="personagem" name="personagem" placeholder="Nome personagem" autocomplete="off" required=""/>
                     <label for="assunto"> <i class="icon icon-info"></i> </label>
                     <img src="img/loading.gif" alt="loading.gif" id="loading" title="Carregando" class="loading" style=" width: 7%;display: none;  "/>
+
+                    <div class="box-btn" id="divBtnBuscar">
+                        <button type="submit" class="btn-envia zoom-shadow">
+                            <i class="icon icon-forward-1" id="btn_buscar"> Buscar</i>
+                        </button>
+                    </div>
                 </span>
 
-                <div class="box-btn" id="divBtnBuscar">
-
-                    <button type="submit" class="btn-envia zoom-shadow">
-                        <i class="icon icon-forward-1" id="btn_buscar"> Buscar</i>
-                    </button>
-
-                </div>
 
                 <table id="tabelaDesenhos">
-                    <tr>
-                      <th>ID</th>
-                      <th>Nome</th>
-                      <th>Imagem</th>
-                    </tr>
                     <tbody>
                     </tbody>
                   </table>

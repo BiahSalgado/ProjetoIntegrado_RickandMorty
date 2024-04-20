@@ -77,7 +77,7 @@ $(function () {
 
     function carregaDadosTabela(dados)
     {
-        var content = '';
+        var content = '<tr><th>ID</th><th>Nome</th><th>Imagem</th></tr>';
 
         $.each(dados, function(index, value) {
             
