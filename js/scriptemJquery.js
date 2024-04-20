@@ -77,11 +77,12 @@ $(function () {
 
    function carregaDadosTabela(dados)
    {
-       var content = '<tr><th>Nome</th><th>Imagem</th></tr>';
+       var content = '<tr><th>ID</th><th>Nome</th><th>Imagem</th></tr>';
 
        $.each(dados, function(index, value) {
            
            content += '<tr id="' + value.id + '">';
+           content += '<td>' +  value.id + '</td>';
            content += '<td> <b>' + value.name  + ' </b></td>';
            content += '<td> <img src="' +  value.image + '" alt="' +  value.name + '" width="80" height="80"></td>';
            content += '</tr>';
