@@ -6,7 +6,7 @@
 .main_header .content { float:left; padding:0px 0; }
 
 .fixed            { display:block; position:fixed; z-index:9;  }
-.main_header_logo { text-align:center; margin:auto; float:none; width:138px; }
+.main_header_logo { text-align:center; margin:auto; float:none; }
 .main_header_logo img { height:69px; }
 
 /*Seu Código*/
