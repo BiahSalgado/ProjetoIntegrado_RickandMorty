@@ -453,3 +453,25 @@
   display: none;
   text-align: center;
 }
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  width: 155px;
+  display: inline-block;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.card-title {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+}

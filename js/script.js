@@ -84,30 +84,37 @@ $('#personagem').keypress(function (e) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
-   function carregaDadosTabela(dados)
-   {
-       var content =''; 
-
-       if(dados.length > 0)
-       {
-         var content = '<tr><th>NOME</th><th>IMAGEM</th></tr>';
-       }
-       else
-       {
-         var content = '<tr><th>Nenhum resultado encontrado</th></tr>';
-       }
-
-       $.each(dados, function(index, value) {
-           
-           content += '<tr id="' + value.id + '">';
-           content += '<td> <b>' + value.name  + ' </b></td>';
-           content += '<td> <img src="' +  value.image + '" alt="' +  value.name + '" width="80" height="80"></td>';
-           content += '</tr>';
-
-       });
-       
-       $('#tabelaDesenhos tbody').html(content);
-   }
+    function carregaDadosTabela(dados) {
+        var $container = $('#tabelaDesenhos');
+        $container.empty();
+    
+        if (dados && dados.length > 0) {
+            var rowCounter = 0;
+            var $row = $('<div>').addClass('row');
+    
+            dados.forEach(function (value, index) {
+                var $card = $('<div>').addClass('card col-md-4 mb-3');
+                var $cardBody = $('<div>').addClass('card-body');
+                var $cardTitle = $('<h5>').addClass('card-title').text(value.name);
+                var $cardImage = $('<img>').addClass('card-img-top').attr('src', value.image).attr('alt', value.name).attr('width', '100').attr('height', '100');
+    
+                $cardBody.append($cardTitle);
+                $cardBody.append($cardImage);
+                $card.append($cardBody);
+                $row.append($card);
+    
+                rowCounter++;
+                if (rowCounter % 3 === 0 || index === dados.length - 1) {
+                    $container.append($row);
+                    $row = $('<div>').addClass('row');
+                }
+            });
+        } else {
+            var $noResults = $('<div>').addClass('alert alert-warning').text('Nenhum resultado encontrado');
+            $container.append($noResults);
+        }
+    }
+    
    
    function httpGet(theUrl)
    {
