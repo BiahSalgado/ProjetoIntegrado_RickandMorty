@@ -2,12 +2,17 @@ $(function () {
 
     var listPersonagens = [];
 
-   console.log('teste');
-
-//     document.getElementById("loader").style.display = "none";
-//    document.getElementById("myDivLoading").style.display = "block";
-
    buscaAPIPersonagens();
+
+$('#personagem').keypress(function (e) {
+
+    var key = e.which;
+    if(key == 13)  
+     {
+       $("#btn_buscar").click();
+       return false;  
+     }
+   });
 
    $("#btn_buscar").click(function() {
 
@@ -31,6 +36,8 @@ $(function () {
        document.getElementById("divBtnBuscar").style.display = "block";
        document.getElementById("loading").style.display = "none";
    });
+
+  
 
    //HEADER
    $(window).scroll(function () {
@@ -77,12 +84,11 @@ $(function () {
 
    function carregaDadosTabela(dados)
    {
-       var content = '<tr><th>ID</th><th>Nome</th><th>Imagem</th></tr>';
+       var content = '<tr><th>NOME</th><th>IMAGEM</th></tr>';
 
        $.each(dados, function(index, value) {
            
            content += '<tr id="' + value.id + '">';
-           content += '<td>' +  value.id + '</td>';
            content += '<td> <b>' + value.name  + ' </b></td>';
            content += '<td> <img src="' +  value.image + '" alt="' +  value.name + '" width="80" height="80"></td>';
            content += '</tr>';

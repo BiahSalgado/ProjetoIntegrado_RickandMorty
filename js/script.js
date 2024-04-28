@@ -2,24 +2,30 @@ $(function () {
 
     var listPersonagens = [];
 
-   console.log('teste');
-
-//     document.getElementById("loader").style.display = "none";
-//    document.getElementById("myDivLoading").style.display = "block";
-
    buscaAPIPersonagens();
+
+$('#personagem').keypress(function (e) {
+
+    var key = e.which;
+    if(key == 13)  
+     {
+       $("#btn_buscar").click();
+       return false;  
+     }
+   });
 
    $("#btn_buscar").click(function() {
 
        document.getElementById("divBtnBuscar").style.display = "none";
        document.getElementById("loading").style.display = "block";
        
-       var campoPersonagem = $('#personagem').val();
+       var campoPersonagem = escapeRegExp($('#personagem').val()).trim();
 
        if(campoPersonagem.length > 0)
        {
            //var filtrado = listPersonagens.filter(function(obj) { return obj.name == campoPersonagem; });
-           var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
+           //var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
+           var filtrado = listPersonagens.filter(obj => new RegExp(campoPersonagem.toLowerCase(), 'i').test(obj.name.toLowerCase()));
 
            carregaDadosTabela(filtrado);
        }
@@ -32,7 +38,6 @@ $(function () {
        document.getElementById("loading").style.display = "none";
    });
 
-   //HEADER
    $(window).scroll(function () {
          if($(this).scrollTop() > 200)
          {
@@ -75,9 +80,22 @@ $(function () {
        document.getElementById("loading").style.display = "none";
    }
 
+   function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
    function carregaDadosTabela(dados)
    {
-       var content = '<tr><th>Nome</th><th>Imagem</th></tr>';
+       var content =''; 
+
+       if(dados.length > 0)
+       {
+         var content = '<tr><th>NOME</th><th>IMAGEM</th></tr>';
+       }
+       else
+       {
+         var content = '<tr><th>Nenhum resultado encontrado</th></tr>';
+       }
 
        $.each(dados, function(index, value) {
            
