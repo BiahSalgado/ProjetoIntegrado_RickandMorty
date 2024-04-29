@@ -1,127 +1,121 @@
-$(function () {
-
+document.addEventListener("DOMContentLoaded", function () {
     var listPersonagens = [];
 
-   buscaAPIPersonagens();
+    buscaAPIPersonagens();
 
-$('#personagem').keypress(function (e) {
+    document.getElementById('personagem').addEventListener('keypress', function (e) {
+        var key = e.which || e.keyCode;
+        if (key === 13) {
+            document.getElementById('btn_buscar').click();
+            return false;
+        }
+    });
 
-    var key = e.which;
-    if(key == 13)  
-     {
-       $("#btn_buscar").click();
-       return false;  
-     }
-   });
+    document.getElementById('btn_buscar').addEventListener('click', function () {
+        document.getElementById('divBtnBuscar').style.display = "none";
+        document.getElementById('loading').style.display = "block";
 
-   $("#btn_buscar").click(function() {
+        var campoPersonagem = escapeRegExp(document.getElementById('personagem').value).trim();
 
-       document.getElementById("divBtnBuscar").style.display = "none";
-       document.getElementById("loading").style.display = "block";
-       
-       var campoPersonagem = escapeRegExp($('#personagem').val()).trim();
+        if (campoPersonagem.length > 0) {
+            var filtrado = listPersonagens.filter(function (obj) {
+                return new RegExp(campoPersonagem.toLowerCase(), 'i').test(obj.name.toLowerCase());
+            });
+            carregaDadosTabela(filtrado);
+        } else {
+            carregaDadosTabela(listPersonagens);
+        }
 
-       if(campoPersonagem.length > 0)
-       {
-           //var filtrado = listPersonagens.filter(function(obj) { return obj.name == campoPersonagem; });
-           //var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
-           var filtrado = listPersonagens.filter(obj => new RegExp(campoPersonagem.toLowerCase(), 'i').test(obj.name.toLowerCase()));
+        document.getElementById('divBtnBuscar').style.display = "block";
+        document.getElementById('loading').style.display = "none";
+    });
 
-           carregaDadosTabela(filtrado);
-       }
-       else
-       {
-           carregaDadosTabela(listPersonagens);
-       }
+    window.addEventListener('scroll', function () {
+        if (window.pageYOffset > 200) {
+            if (!document.querySelector('.main_header').classList.contains('fixed')) {
+                document.querySelector('.main_header').classList.add('fixed');
+                document.querySelector('.main_header').style.top = '-100px';
+                setTimeout(function () {
+                    document.querySelector('.main_header').style.top = '0px';
+                }, 500);
+            }
+        } else {
+            document.querySelector('.main_header').classList.remove('fixed');
+        }
+    });
 
-       document.getElementById("divBtnBuscar").style.display = "block";
-       document.getElementById("loading").style.display = "none";
-   });
+    function buscaAPIPersonagens() {
+        document.getElementById('divBtnBuscar').style.display = "none";
+        document.getElementById('loading').style.display = "block";
 
-   $(window).scroll(function () {
-         if($(this).scrollTop() > 200)
-         {
-             if (!$('.main_header').hasClass('fixed'))
-             {
-                 $('.main_header').stop().addClass('fixed').css('top', '-100px').animate(
-                     {
-                         'top': '0px'
-                     }, 500);
-             }
-         }
-         else
-         {
-             $('.main_header').removeClass('fixed');
-         }
-   });
+        var url = 'https://rickandmortyapi.com/api/character/?page=#pagina#';
 
-   function buscaAPIPersonagens()
-   {
-       document.getElementById("divBtnBuscar").style.display = "none";
-       document.getElementById("loading").style.display = "block";
+        var resultado = httpGet(url.replace('#pagina#', 1));
+        var totalPaginas = resultado.info.pages + 1;
 
-       var url = 'https://rickandmortyapi.com/api/character/?page=#pagina#';
+        for (var i = 1; i < totalPaginas; i++) {
+            var resultadoAPI = httpGet(url.replace('#pagina#', i));
+            listPersonagens.push(...resultadoAPI.results);
+        }
 
-       var resultado = httpGet(url.replace('#pagina#',1));
-       var totalPaginas = resultado.info.pages +1;
+        carregaDadosTabela(listPersonagens);
 
-       for (var i = 1; i < totalPaginas; i++) {
+        document.getElementById('divBtnBuscar').style.display = "block";
+        document.getElementById('loading').style.display = "none";
+    }
 
-          var resultadoAPI = httpGet(url.replace('#pagina#',i));
-
-          for (var x = 0; x < resultadoAPI.results.length; x++) {
-               listPersonagens.push(resultadoAPI.results[x]);
-           }
-       }
-      
-       carregaDadosTabela(listPersonagens);
-
-       document.getElementById("divBtnBuscar").style.display = "block";
-       document.getElementById("loading").style.display = "none";
-   }
-
-   function escapeRegExp(string) {
+    function escapeRegExp(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     function carregaDadosTabela(dados) {
-        var $container = $('#tabelaDesenhos');
-        $container.empty();
-    
+        var container = document.getElementById('tabelaDesenhos');
+        container.innerHTML = '';
+
         if (dados && dados.length > 0) {
             var rowCounter = 0;
-            var $row = $('<div>').addClass('row');
-    
+            var row = document.createElement('div');
+            row.className = 'row';
+
             dados.forEach(function (value, index) {
-                var $card = $('<div>').addClass('card col-md-4 mb-3');
-                var $cardBody = $('<div>').addClass('card-body');
-                var $cardTitle = $('<h5>').addClass('card-title').text(value.name);
-                var $cardImage = $('<img>').addClass('card-img-top').attr('src', value.image).attr('alt', value.name).attr('width', '100').attr('height', '100');
-    
-                $cardBody.append($cardTitle);
-                $cardBody.append($cardImage);
-                $card.append($cardBody);
-                $row.append($card);
-    
+                var card = document.createElement('div');
+                card.className = 'card col-md-4 mb-3';
+                var cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                var cardTitle = document.createElement('h5');
+                cardTitle.className = 'card-title';
+                cardTitle.textContent = value.name;
+                var cardImage = document.createElement('img');
+                cardImage.className = 'card-img-top';
+                cardImage.src = value.image;
+                cardImage.alt = value.name;
+                cardImage.width = '100';
+                cardImage.height = '100';
+
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardImage);
+                card.appendChild(cardBody);
+                row.appendChild(card);
+
                 rowCounter++;
                 if (rowCounter % 3 === 0 || index === dados.length - 1) {
-                    $container.append($row);
-                    $row = $('<div>').addClass('row');
+                    container.appendChild(row);
+                    row = document.createElement('div');
+                    row.className = 'row';
                 }
             });
         } else {
-            var $noResults = $('<div>').addClass('alert alert-warning').text('Nenhum resultado encontrado');
-            $container.append($noResults);
+            var noResults = document.createElement('div');
+            noResults.className = 'alert alert-warning';
+            noResults.textContent = 'Nenhum resultado encontrado';
+            container.appendChild(noResults);
         }
     }
-    
-   
-   function httpGet(theUrl)
-   {
-       var xmlHttp = new XMLHttpRequest();
-       xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-       xmlHttp.send( null );
-       return jQuery.parseJSON(xmlHttp.responseText);
-   }
 
+    function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false);
+        xmlHttp.send(null);
+        return JSON.parse(xmlHttp.responseText);
+    }
 });

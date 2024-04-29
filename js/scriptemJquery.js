@@ -19,12 +19,13 @@ $('#personagem').keypress(function (e) {
        document.getElementById("divBtnBuscar").style.display = "none";
        document.getElementById("loading").style.display = "block";
        
-       var campoPersonagem = $('#personagem').val();
+       var campoPersonagem = escapeRegExp($('#personagem').val()).trim();
 
        if(campoPersonagem.length > 0)
        {
            //var filtrado = listPersonagens.filter(function(obj) { return obj.name == campoPersonagem; });
-           var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
+           //var filtrado = listPersonagens.filter(obj => obj.name.toLowerCase().search(campoPersonagem.toLowerCase()) !== -1);
+           var filtrado = listPersonagens.filter(obj => new RegExp(campoPersonagem.toLowerCase(), 'i').test(obj.name.toLowerCase()));
 
            carregaDadosTabela(filtrado);
        }
@@ -37,9 +38,6 @@ $('#personagem').keypress(function (e) {
        document.getElementById("loading").style.display = "none";
    });
 
-  
-
-   //HEADER
    $(window).scroll(function () {
          if($(this).scrollTop() > 200)
          {
@@ -82,21 +80,41 @@ $('#personagem').keypress(function (e) {
        document.getElementById("loading").style.display = "none";
    }
 
-   function carregaDadosTabela(dados)
-   {
-       var content = '<tr><th>NOME</th><th>IMAGEM</th></tr>';
+   function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
 
-       $.each(dados, function(index, value) {
-           
-           content += '<tr id="' + value.id + '">';
-           content += '<td> <b>' + value.name  + ' </b></td>';
-           content += '<td> <img src="' +  value.image + '" alt="' +  value.name + '" width="80" height="80"></td>';
-           content += '</tr>';
-
-       });
-       
-       $('#tabelaDesenhos tbody').html(content);
-   }
+    function carregaDadosTabela(dados) {
+        var $container = $('#tabelaDesenhos');
+        $container.empty();
+    
+        if (dados && dados.length > 0) {
+            var rowCounter = 0;
+            var $row = $('<div>').addClass('row');
+    
+            dados.forEach(function (value, index) {
+                var $card = $('<div>').addClass('card col-md-4 mb-3');
+                var $cardBody = $('<div>').addClass('card-body');
+                var $cardTitle = $('<h5>').addClass('card-title').text(value.name);
+                var $cardImage = $('<img>').addClass('card-img-top').attr('src', value.image).attr('alt', value.name).attr('width', '100').attr('height', '100');
+    
+                $cardBody.append($cardTitle);
+                $cardBody.append($cardImage);
+                $card.append($cardBody);
+                $row.append($card);
+    
+                rowCounter++;
+                if (rowCounter % 3 === 0 || index === dados.length - 1) {
+                    $container.append($row);
+                    $row = $('<div>').addClass('row');
+                }
+            });
+        } else {
+            var $noResults = $('<div>').addClass('alert alert-warning').text('Nenhum resultado encontrado');
+            $container.append($noResults);
+        }
+    }
+    
    
    function httpGet(theUrl)
    {
