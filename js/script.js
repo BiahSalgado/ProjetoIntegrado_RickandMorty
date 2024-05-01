@@ -81,7 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 var card = document.createElement('div');
                 card.className = 'card col-md-4 mb-3';
                 var cardBody = document.createElement('div');
-                cardBody.className = 'card-body';
                 var cardTitle = document.createElement('h5');
                 cardTitle.className = 'card-title';
                 cardTitle.textContent = value.name;

@@ -82,7 +82,7 @@
 
 .formulario {
 
-    width: 700px;
+    width: 800px;
     background: #7bd7fc;
     padding: 60px 5%;
     text-align: center;
@@ -455,7 +455,6 @@
 }
 
 .card {
-  border: 1px solid #ccc;
   border-radius: 5px;
   margin: 10px;
   width: 155px;
